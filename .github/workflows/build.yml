@@ -1,0 +1,27 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: golang:1.21-alpine
+    steps:
+      - name: Install pre-requisites (1)
+        run: |
+          apk add --no-cache make jq zip curl git npm gettext
+
+      - name: Install pre-requisites (2)
+        run: |
+          go install github.com/github/hub@latest
+
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Build
+        run: make binaries
